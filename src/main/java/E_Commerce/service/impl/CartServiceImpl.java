@@ -8,6 +8,7 @@ import E_Commerce.entity.Cart;
 import E_Commerce.entity.CartItem;
 import E_Commerce.entity.Product;
 import E_Commerce.entity.User;
+import E_Commerce.exception.ResourceNotFoundException;
 import E_Commerce.repository.CartItemRepository;
 import E_Commerce.repository.CartRepository;
 import E_Commerce.repository.ProductRepository;
@@ -34,7 +35,7 @@ public class CartServiceImpl implements CartService {
 
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() ->
-                        new RuntimeException("User not found"));
+                        new ResourceNotFoundException("User not found with email: "+ email));
 
         Cart cart = cartRepository.findByUser(user)
                 .orElseGet(() -> {
@@ -48,7 +49,7 @@ public class CartServiceImpl implements CartService {
         Product product = productRepository.findById(
                         request.getProductId())
                 .orElseThrow(() ->
-                        new RuntimeException("Product not found"));
+                        new ResourceNotFoundException("Product not found with id: " + request.getProductId()));
 
         CartItem item = CartItem.builder()
                 .cart(cart)
@@ -73,11 +74,11 @@ public class CartServiceImpl implements CartService {
 
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() ->
-                        new RuntimeException("User not found"));
+                        new ResourceNotFoundException("User not found with email: "+ email));
 
         Cart cart = cartRepository.findByUser(user)
                 .orElseThrow(() ->
-                        new RuntimeException("Cart not found"));
+                        new ResourceNotFoundException("Cart not found for user: " + email));
 
         BigDecimal total = cart.getItems()
                 .stream()
@@ -112,17 +113,17 @@ public class CartServiceImpl implements CartService {
 
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() ->
-                        new RuntimeException("User not found"));
+                        new ResourceNotFoundException("User not found with email: "+ email));
 
         Cart cart = cartRepository.findByUser(user)
                 .orElseThrow(() ->
-                        new RuntimeException("Cart not found"));
+                        new ResourceNotFoundException("Cart not found for user: " + email));
 
         CartItem cartItem =
                 cartItemRepository.findById(
                                 request.getCartItemId())
                         .orElseThrow(() ->
-                                new RuntimeException(
+                                new ResourceNotFoundException(
                                         "Cart Item not found"));
 
         if (!cartItem.getCart().getId()
@@ -157,15 +158,16 @@ public class CartServiceImpl implements CartService {
 
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() ->
-                        new RuntimeException("User not found"));
+                        new ResourceNotFoundException("User not found with email: "+ email));
 
         Cart cart = cartRepository.findByUser(user)
                 .orElseThrow(() ->
-                        new RuntimeException("Cart not found"));
+                        new ResourceNotFoundException("Cart not found for user: " + email));
 
         CartItem cartItem = cartItemRepository.findById(cartItemId)
                 .orElseThrow(() ->
-                        new RuntimeException("Cart Item not found"));
+                        new ResourceNotFoundException("Cart item not found"));
+
 
         if (!cartItem.getCart().getId()
                 .equals(cart.getId())) {

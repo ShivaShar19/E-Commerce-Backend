@@ -2,6 +2,7 @@ package E_Commerce.service.impl;
 
 import E_Commerce.dto.ProductRequest;
 import E_Commerce.entity.Product;
+import E_Commerce.exception.ResourceNotFoundException;
 import E_Commerce.repository.ProductRepository;
 import E_Commerce.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -38,7 +39,7 @@ public class ProductServiceImpl implements ProductService {
     public Product getProductById(Long id) {
         return productRepository.findById(id)
                 .orElseThrow(() ->
-                        new RuntimeException("Product not found"));
+                        new ResourceNotFoundException("Product not found"));
     }
 
     @Override
@@ -46,7 +47,7 @@ public class ProductServiceImpl implements ProductService {
 
         Product product = productRepository.findById(id)
                 .orElseThrow(() ->
-                        new RuntimeException("Product not found"));
+                        new ResourceNotFoundException("Product not found"));
 
         product.setName(request.getName());
         product.setDescription(request.getDescription());
@@ -62,7 +63,7 @@ public class ProductServiceImpl implements ProductService {
 
         Product product = productRepository.findById(id)
                 .orElseThrow(() ->
-                        new RuntimeException("Product not found"));
+                        new ResourceNotFoundException("Product not found"));
 
         productRepository.delete(product);
     }
