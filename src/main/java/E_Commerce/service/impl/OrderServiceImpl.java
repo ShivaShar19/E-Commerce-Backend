@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -70,5 +71,66 @@ public class OrderServiceImpl implements OrderService {
                 .orElseThrow(() ->
                         new RuntimeException("Order not found"));
     }
+
+    @Override
+    public List<Order> getMyOrders(String email) {
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() ->
+                        new RuntimeException("User not found"));
+
+        return orderRepository.findByUser(user);
+    }
+
+    private boolean isValidTransition(OrderStatus current, OrderStatus next) {
+
+        switch (current) {
+
+            case PENDING:
+                return next == OrderStatus.CONFIRMED;
+
+            case CONFIRMED:
+                return next == OrderStatus.SHIPPED;
+
+            case SHIPPED:
+                return next == OrderStatus.DELIVERED;
+
+            case DELIVERED:
+                return false;
+
+            default:
+                return false;
+        }
+    }
+
+    @Override
+    public Order updateOrderStatus(Long orderId, OrderStatus status) {
+
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+
+        if (!isValidTransition(order.getStatus(), status)) {
+            throw new RuntimeException(
+                    "Invalid status transition: "
+                            + order.getStatus() + " → " + status
+            );
+        }
+
+        order.setStatus(status);
+
+        return orderRepository.save(order);
+    }
+
+    @Override
+    public List<Order> getAllOrders() {
+        return orderRepository.findAll();
+    }
+
+    @Override
+    public Order getOrderById(Long orderId) {
+        return orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+    }
+
 
 }
