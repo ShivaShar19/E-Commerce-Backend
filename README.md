@@ -1,200 +1,136 @@
-# 🛒 E-Commerce Backend API
+# 🛒 E-Commerce Backend (Spring Boot)
 
-A production-style E-Commerce Backend built using Spring Boot, Spring Security, JWT Authentication, PostgreSQL, and JPA/Hibernate.
+## 📌 Overview
+This is a full-stack E-Commerce backend application built using Spring Boot.  
+It provides authentication, product management, cart functionality, and complete order lifecycle management with admin control.
+
+---
 
 ## 🚀 Features
 
-### Authentication & Authorization
-
-* User Registration
-* User Login
-* BCrypt Password Encryption
-* JWT Token Generation
-* JWT Token Validation
-* Stateless Authentication
-* Protected APIs using Spring Security
-
-### Database
-
-* PostgreSQL Integration
-* Spring Data JPA
-* Hibernate ORM
-
-### Security
-
-* Spring Security
-* JWT Authentication Filter
-* Custom UserDetailsService
-* Password Hashing with BCrypt
-
-## 🛠 Tech Stack
-
-* Java 17
-* Spring Boot
-* Spring Security
-* Spring Data JPA
-* PostgreSQL
-* JWT (JSON Web Token)
-* Maven
-* Lombok
-
-## 📁 Project Structure
-
-```
-src
-├── controller
-├── service
-│   ├── impl
-├── repository
-├── entity
-├── dto
-├── security
-├── config
-└── exception
-```
-
-## ⚙️ Setup Instructions
-
-### Clone Repository
-
-```bash
-git clone https://github.com/YOUR_USERNAME/ecommerce-backend.git
-cd ecommerce-backend
-```
-
-### Configure Database
-
-Create a PostgreSQL database:
-
-```sql
-CREATE DATABASE Ecommerce;
-```
-
-Update:
-
-```properties
-src/main/resources/application.properties
-```
-
-```properties
-spring.datasource.url=jdbc:postgresql://localhost:5432/Ecommerce
-spring.datasource.username=postgres
-spring.datasource.password=your_password
-```
-
-### Configure JWT
-
-```properties
-app.jwt.secret=your_secret_key
-app.jwt.expiration=86400000
-```
-
-### Run Application
-
-```bash
-mvn spring-boot:run
-```
-
-Application runs on:
-
-```
-http://localhost:8080
-```
+### 👤 Authentication & Authorization
+- User registration and login
+- JWT-based authentication
+- Role-based access control (USER, ADMIN)
 
 ---
 
-## API Endpoints
-
-### Register User
-
-```http
-POST /api/auth/register
-```
-
-Request Body:
-
-```json
-{
-  "name": "Shivam",
-  "email": "shivam@gmail.com",
-  "password": "123456"
-}
-```
+### 🛍️ Product Management
+- Add products (Admin only)
+- View all products
+- View product details
 
 ---
 
-### Login User
-
-```http
-POST /api/auth/login
-```
-
-Request Body:
-
-```json
-{
-  "email": "shivam@gmail.com",
-  "password": "123456"
-}
-```
-
-Response:
-
-```json
-{
-  "token": "JWT_TOKEN"
-}
-```
+### 🛒 Cart Management
+- Add items to cart
+- Update cart quantity
+- Remove items from cart
+- View cart with total price calculation
 
 ---
 
-### Access Protected API
+### 📦 Order Management
+- Place order from cart
+- View user orders
+- Order status tracking
 
-Add JWT Token:
-
-```http
-Authorization: Bearer YOUR_TOKEN
-```
-
-Example:
-
-```http
-GET /api/test
-```
-
-Response:
-
-```text
-Authenticated Successfully
-```
+Order Flow:
+PENDING → CONFIRMED → SHIPPED → DELIVERED
 
 ---
 
-## Current Progress
+### 🛠️ Admin Features
+- View all orders
+- Update order status
+- Secure admin-only APIs
 
-### Completed
+---
 
-* JWT Authentication
-* User Registration
-* User Login
-* Spring Security Integration
-* PostgreSQL Integration
-* Password Encryption
+### ⚠️ Exception Handling
+- Global exception handling using `@RestControllerAdvice`
+- Custom exceptions:
+  - ResourceNotFoundException
+  - InvalidRequestException
+  - UnauthorizedException
 
-### Upcoming Features
+---
 
-* Product Management
-* Categories
-* Shopping Cart
-* Order Management
-* Image Upload (Cloudinary)
-* Swagger Documentation
-* Global Exception Handling
-* Docker Deployment
-* CI/CD Pipeline
+## 🧱 Tech Stack
+
+- Java
+- Spring Boot
+- Spring Security
+- JWT Authentication
+- Spring Data JPA
+- Hibernate
+- PostgreSQL / MySQL
+- Maven
+
+---
+
+## 🏗️ Architecture
+
+Controller → Service → Repository → Database
+
+- Layered architecture
+- DTO-based request/response structure
+- Clean separation of concerns
+
+---
+
+## 🔐 Security
+
+- JWT token-based authentication
+- Role-based authorization (USER / ADMIN)
+- Protected admin endpoints
+
+---
+
+## 📡 API Endpoints
+
+### Auth
+- POST /api/auth/register
+- POST /api/auth/login
+
+### Products
+- GET /api/products
+- POST /api/products (ADMIN)
+
+### Cart
+- POST /api/cart/add
+- GET /api/cart
+- PUT /api/cart/update
+- DELETE /api/cart/remove
+
+### Orders
+- POST /api/orders/place
+- GET /api/orders/my-orders
+- GET /api/orders (ADMIN)
+- PUT /api/orders/{orderId}/status (ADMIN)
+
+---
+
+## 🎯 Learning Outcomes
+
+- REST API development using Spring Boot
+- JWT authentication and Spring Security
+- Role-based access control
+- Exception handling in production apps
+- Real-world e-commerce backend design
+
+---
+
+## 📌 Future Improvements
+
+- Frontend integration (React)
+- Payment gateway integration
+- Pagination and filtering
+- Order tracking UI
+
+---
 
 ## 👨‍💻 Author
 
-Shivam Sharma
-
-Java Full Stack Developer
+Shivam Sharma  
+Full Stack Developer (Java + Spring Boot + React)
