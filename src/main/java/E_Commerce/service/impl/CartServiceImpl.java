@@ -1,6 +1,9 @@
 package E_Commerce.service.impl;
 
 import E_Commerce.dto.AddToCartRequest;
+import E_Commerce.dto.CartItemResponse;
+import E_Commerce.dto.CartResponse;
+import E_Commerce.dto.UpdateCartRequest;
 import E_Commerce.entity.Cart;
 import E_Commerce.entity.CartItem;
 import E_Commerce.entity.Product;
@@ -14,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -65,15 +69,112 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public Cart getCart(String email) {
+    public CartResponse getCart(String email) {
 
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() ->
                         new RuntimeException("User not found"));
 
-        return cartRepository.findByUser(user)
+        Cart cart = cartRepository.findByUser(user)
                 .orElseThrow(() ->
                         new RuntimeException("Cart not found"));
+
+        BigDecimal total = cart.getItems()
+                .stream()
+                .map(CartItem::getSubtotal)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        List<CartItemResponse> items = cart.getItems()
+                .stream()
+                .map(item -> CartItemResponse.builder()
+                        .cartItemId(item.getId())
+                        .productName(item.getProduct().getName())
+                        .quantity(item.getQuantity())
+                        .price(item.getProduct().getPrice())
+                        .subtotal(item.getSubtotal())
+                        .build())
+                .toList();
+
+        return CartResponse.builder()
+                .items(items)
+                .totalAmount(total)
+                .build();
+    }
+
+    @Override
+    public Cart updateCartItem(
+            String email,
+            UpdateCartRequest request) {
+
+        System.out.println("REQUEST = " + request);
+        System.out.println("CartItemId = " + request.getCartItemId());
+        System.out.println("Quantity = " + request.getQuantity());
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() ->
+                        new RuntimeException("User not found"));
+
+        Cart cart = cartRepository.findByUser(user)
+                .orElseThrow(() ->
+                        new RuntimeException("Cart not found"));
+
+        CartItem cartItem =
+                cartItemRepository.findById(
+                                request.getCartItemId())
+                        .orElseThrow(() ->
+                                new RuntimeException(
+                                        "Cart Item not found"));
+
+        if (!cartItem.getCart().getId()
+                .equals(cart.getId())) {
+
+            throw new RuntimeException(
+                    "Unauthorized cart item");
+        }
+
+        cartItem.setQuantity(
+                request.getQuantity());
+
+        cartItem.setSubtotal(
+                cartItem.getProduct()
+                        .getPrice()
+                        .multiply(
+                                BigDecimal.valueOf(
+                                        request.getQuantity()
+                                )
+                        )
+        );
+
+        cartItemRepository.save(cartItem);
+
+        return cart;
+    }
+
+    @Override
+    public void removeCartItem(
+            String email,
+            Long cartItemId) {
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() ->
+                        new RuntimeException("User not found"));
+
+        Cart cart = cartRepository.findByUser(user)
+                .orElseThrow(() ->
+                        new RuntimeException("Cart not found"));
+
+        CartItem cartItem = cartItemRepository.findById(cartItemId)
+                .orElseThrow(() ->
+                        new RuntimeException("Cart Item not found"));
+
+        if (!cartItem.getCart().getId()
+                .equals(cart.getId())) {
+
+            throw new RuntimeException(
+                    "Unauthorized cart item");
+        }
+
+        cartItemRepository.delete(cartItem);
     }
 
 
