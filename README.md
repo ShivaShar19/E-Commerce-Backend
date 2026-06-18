@@ -1,136 +1,233 @@
-# 🛒 E-Commerce Backend (Spring Boot)
+# 🛒 E-Commerce Backend API
 
 ## 📌 Overview
-This is a full-stack E-Commerce backend application built using Spring Boot.  
-It provides authentication, product management, cart functionality, and complete order lifecycle management with admin control.
+
+A production-style E-Commerce Backend application built using Spring Boot and Spring Security. The system supports JWT authentication, role-based authorization, product management, shopping cart operations, and complete order lifecycle management.
+
+This project follows a layered architecture and demonstrates real-world backend development practices used in modern e-commerce platforms.
 
 ---
 
 ## 🚀 Features
 
 ### 👤 Authentication & Authorization
-- User registration and login
-- JWT-based authentication
-- Role-based access control (USER, ADMIN)
+
+* User Registration
+* User Login
+* JWT Token-Based Authentication
+* BCrypt Password Encryption
+* Role-Based Access Control (USER / ADMIN)
 
 ---
 
 ### 🛍️ Product Management
-- Add products (Admin only)
-- View all products
-- View product details
+
+* Create Products (Admin Only)
+* Update Products (Admin Only)
+* Delete Products (Admin Only)
+* View All Products
+* View Product Details
+* Search Products by Keyword
 
 ---
 
 ### 🛒 Cart Management
-- Add items to cart
-- Update cart quantity
-- Remove items from cart
-- View cart with total price calculation
+
+* Add Products to Cart
+* View User Cart
+* Update Product Quantity
+* Remove Products from Cart
+* Automatic Cart Total Calculation
 
 ---
 
 ### 📦 Order Management
-- Place order from cart
-- View user orders
-- Order status tracking
 
-Order Flow:
-PENDING → CONFIRMED → SHIPPED → DELIVERED
+* Place Orders from Cart
+* View Order History
+* View Order Details
+* Order Status Tracking
+
+#### Order Workflow
+
+```text
+PENDING
+   ↓
+CONFIRMED
+   ↓
+SHIPPED
+   ↓
+DELIVERED
+```
 
 ---
 
 ### 🛠️ Admin Features
-- View all orders
-- Update order status
-- Secure admin-only APIs
+
+* Manage Product Catalog
+* View All Orders
+* Update Order Status
+* Secure Admin-Only APIs
 
 ---
 
 ### ⚠️ Exception Handling
-- Global exception handling using `@RestControllerAdvice`
-- Custom exceptions:
-  - ResourceNotFoundException
-  - InvalidRequestException
-  - UnauthorizedException
+
+Global exception handling implemented using:
+
+```java
+@RestControllerAdvice
+```
+
+Custom Exceptions:
+
+* ResourceNotFoundException
+* InvalidRequestException
+* UnauthorizedException
 
 ---
 
 ## 🧱 Tech Stack
 
-- Java
-- Spring Boot
-- Spring Security
-- JWT Authentication
-- Spring Data JPA
-- Hibernate
-- PostgreSQL / MySQL
-- Maven
+### Backend
+
+* Java 21
+* Spring Boot
+* Spring Security
+* Spring Data JPA
+* Hibernate
+* Maven
+
+### Database
+
+* PostgreSQL
+
+### Security
+
+* JWT Authentication
+* BCrypt Password Encoder
 
 ---
 
 ## 🏗️ Architecture
 
-Controller → Service → Repository → Database
+```text
+Controller
+    ↓
+Service
+    ↓
+Repository
+    ↓
+Database
+```
 
-- Layered architecture
-- DTO-based request/response structure
-- Clean separation of concerns
+### Design Principles
+
+* Layered Architecture
+* DTO-Based Communication
+* Separation of Concerns
+* RESTful API Design
 
 ---
 
-## 🔐 Security
+## 🔐 Security Features
 
-- JWT token-based authentication
-- Role-based authorization (USER / ADMIN)
-- Protected admin endpoints
+* Stateless Authentication
+* JWT Access Tokens
+* Role-Based Authorization
+* Protected Endpoints
+* Password Encryption using BCrypt
+* CORS Configuration
 
 ---
 
-## 📡 API Endpoints
+## 📡 REST API Endpoints
 
-### Auth
-- POST /api/auth/register
-- POST /api/auth/login
+### Authentication
+
+| Method | Endpoint           |
+| ------ | ------------------ |
+| POST   | /api/auth/register |
+| POST   | /api/auth/login    |
+
+---
 
 ### Products
-- GET /api/products
-- POST /api/products (ADMIN)
+
+| Method | Endpoint                           |
+| ------ | ---------------------------------- |
+| GET    | /api/products                      |
+| GET    | /api/products/{id}                 |
+| GET    | /api/products/search?keyword=value |
+| POST   | /api/products                      |
+| PUT    | /api/products/{id}                 |
+| DELETE | /api/products/{id}                 |
+
+---
 
 ### Cart
-- POST /api/cart/add
-- GET /api/cart
-- PUT /api/cart/update
-- DELETE /api/cart/remove
+
+| Method | Endpoint                      |
+| ------ | ----------------------------- |
+| POST   | /api/cart/add                 |
+| GET    | /api/cart                     |
+| PUT    | /api/cart/update              |
+| DELETE | /api/cart/remove/{cartItemId} |
+
+---
 
 ### Orders
-- POST /api/orders/place
-- GET /api/orders/my-orders
-- GET /api/orders (ADMIN)
-- PUT /api/orders/{orderId}/status (ADMIN)
+
+| Method | Endpoint                     |
+| ------ | ---------------------------- |
+| POST   | /api/orders/place            |
+| GET    | /api/orders/my-orders        |
+| GET    | /api/orders/{orderId}        |
+| GET    | /api/orders                  |
+| PUT    | /api/orders/{orderId}/status |
 
 ---
 
-## 🎯 Learning Outcomes
+## 🎯 Key Learning Outcomes
 
-- REST API development using Spring Boot
-- JWT authentication and Spring Security
-- Role-based access control
-- Exception handling in production apps
-- Real-world e-commerce backend design
+* Spring Boot REST API Development
+* JWT Authentication & Authorization
+* Spring Security Configuration
+* Role-Based Access Control
+* Database Design with JPA & Hibernate
+* Exception Handling in Production Applications
+* E-Commerce Domain Modeling
+* Clean Architecture Practices
 
 ---
 
-## 📌 Future Improvements
+## 📈 Future Enhancements
 
-- Frontend integration (React)
-- Payment gateway integration
-- Pagination and filtering
-- Order tracking UI
+* React Frontend Integration
+* Product Reviews & Ratings
+* Wishlist Functionality
+* Payment Gateway Integration
+* Product Categories
+* Pagination & Filtering
+* Cloudinary Image Upload
+* Docker Containerization
+* CI/CD Pipeline
+* Deployment on Railway & Vercel
 
 ---
 
 ## 👨‍💻 Author
 
-Shivam Sharma  
-Full Stack Developer (Java + Spring Boot + React)
+**Shivam Sharma**
+
+Java Full Stack Developer
+
+### Skills
+
+* Java
+* Spring Boot
+* Spring Security
+* PostgreSQL
+* React
+* REST APIs
+* JWT Authentication
