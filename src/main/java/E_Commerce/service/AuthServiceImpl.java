@@ -4,6 +4,7 @@ import E_Commerce.dto.LoginRequest;
 import E_Commerce.dto.RegisterRequest;
 import E_Commerce.entity.User;
 import E_Commerce.enums.Role;
+import E_Commerce.exception.InvalidRequestException;
 import E_Commerce.repository.UserRepository;
 import E_Commerce.security.JwtService;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +23,9 @@ public class AuthServiceImpl implements AuthService{
     public String register(RegisterRequest request) {
 
         if(userRepository.existsByEmail(request.getEmail())){
-            return "Email already exists";
+            throw new InvalidRequestException(
+                    "Email already exists"
+            );
         }
 
         User user = User.builder()
@@ -41,13 +44,17 @@ public class AuthServiceImpl implements AuthService{
     public String login(LoginRequest request) {
 
         User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new InvalidRequestException(
+                "User not found"
+        ));
 
         if (!passwordEncoder.matches(
                 request.getPassword(),
                 user.getPassword()
         )) {
-            throw new RuntimeException("Invalid Credentials");
+            throw new InvalidRequestException(
+                    "Invalid Credentials"
+            );
         }
 
         return jwtService.generateToken(user.getEmail());
