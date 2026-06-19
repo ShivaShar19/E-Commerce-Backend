@@ -1,5 +1,6 @@
 package E_Commerce.service;
 
+import E_Commerce.dto.AuthResponse;
 import E_Commerce.dto.LoginRequest;
 import E_Commerce.dto.RegisterRequest;
 import E_Commerce.entity.User;
@@ -41,12 +42,12 @@ public class AuthServiceImpl implements AuthService{
     }
 
     @Override
-    public String login(LoginRequest request) {
+    public AuthResponse login(LoginRequest request) {
 
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new InvalidRequestException(
-                "User not found"
-        ));
+                        "User not found"
+                ));
 
         if (!passwordEncoder.matches(
                 request.getPassword(),
@@ -57,7 +58,11 @@ public class AuthServiceImpl implements AuthService{
             );
         }
 
-        return jwtService.generateToken(user.getEmail());
-    }
+        String token = jwtService.generateToken(user.getEmail());
 
+        return new AuthResponse(
+                token,
+                user.getRole().name()
+        );
+    }
 }
